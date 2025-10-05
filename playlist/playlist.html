@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Playlist | Web2Power</title>
+        <link rel="icon" href="https://web2power.com/libs/images/logo.png">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://raw.githack.com/webutilityhub/cdnjs/main/playlist/playlist.js"></script>
+    </head>
+    <body class="bg-gray-900 text-white min-h-screen flex flex-col">
+        <div class="flex flex-1">
+            <aside id="sidebar"
+                class="border-r border-gray-600 fixed md:sticky top-0 left-0 w-80 h-screen bg-gray-800 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-50">
+                <div class="flex items-center mb-6">
+                    <img src="https://web2power.com/libs/images/logo.png" alt="Logo" class="w-10 h-10 rounded mr-2">
+                    <span class="text-2xl font-bold">Web2Power</span>
+                </div>
+                <ul id="sidebarLinks" class="space-y-4">
+                    <!-- JS injects sidebar links here -->
+                </ul>
+                <div class="mt-8 border border-gray-700 text-center">
+                    [ ad:sidebar ]
+                </div>
+            </aside>
+            <!-- Overlay for mobile sidebar -->
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden"></div>
+            <!-- Right column: Topbar + Main content -->
+            <div class="flex-1 flex flex-col md:ml-0">
+                <!-- Topbar (keeps original color) -->
+                <header class="bg-gray-800 p-4 flex justify-between items-center">
+                    <!-- Sidebar Toggle (mobile only) -->
+                    <button id="menuBtn" class="md:hidden text-2xl">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="flex-1 flex justify-end items-center space-x-4">
+                        <button class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">Sign In</button>
+                        <button class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">More</button>
+                    </div>
+                </header>
+                <!-- Main Content -->
+                <main class="flex-1 p-6">
+                    <div class="mb-4">
+                        <input type="text" id="search" placeholder="Search songs..." autocomplete="off"
+                            class="w-full xl:w-1/2 p-2 rounded bg-gray-700 text-white focus:outline-none" />
+                    </div>
+                    <!-- Ad Section (Top) -->
+                    <div class="mb-6 border border-gray-700 text-center">
+                        [ ad:head ]
+                    </div>
+                    <!-- Playlist -->
+                    <div id="playlist" class="grid gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <!-- Songs appear here -->
+                    </div>
+                    <!-- Pagination -->
+                    <div class="flex justify-center items-center mt-8 space-x-3" id="pagination"></div>
+                    <!-- Ad Section (Bottom) -->
+                    <div class="mt-8 border border-gray-700 text-center">
+                        [ ad:foot ]
+                    </div>
+                </main>
+                <!-- Footer -->
+                <footer class="bg-gray-800 text-center p-4 text-sm text-gray-400">
+                    © 2025 MyPlaylist. All rights reserved.
+                </footer>
+            </div>
+        </div>
+        <script>
+            // Playlist data with config (unchanged structure)
+            const playlistConfig = {
+                sidebar: [
+                    { label: "Playlists", icon: "bi-music-note-list", url: "#" },
+                    { label: "Favorites", icon: "bi-heart", url: "#" },
+                ],
+                songsPerPage: 12, // change to 20 for production
+                sort: "title", // "title" | "artist" | "random" | null
+                songs: [
+                    { title: "Last Last", artist: "Burna Boy", thumbnail: "https://i.ytimg.com/vi/4Eo84jDIMKI/hqdefault.jpg", link: "https://www.youtube.com/watch?v=4Eo84jDIMKI" },
+                    { title: "Calm Down", artist: "Rema", thumbnail: "https://i.ytimg.com/vi/WcIcVapfqXw/hqdefault.jpg", link: "https://www.youtube.com/watch?v=WcIcVapfqXw" },
+                    { title: "Love Nwantiti", artist: "CKay", thumbnail: "https://i.ytimg.com/vi/eZ1iZ0z6lOc/hqdefault.jpg", link: "https://www.youtube.com/watch?v=eZ1iZ0z6lOc" },
+                    { title: "Essence", artist: "Wizkid ft. Tems", thumbnail: "https://i.ytimg.com/vi/Wt88GMJmVk0/hqdefault.jpg", link: "https://www.youtube.com/watch?v=Wt88GMJmVk0" },
+                    { title: "Soweto", artist: "Victony & Tempoe", thumbnail: "https://i.ytimg.com/vi/q_0xifuTqVA/hqdefault.jpg", link: "https://www.youtube.com/watch?v=q_0xifuTqVA" },
+                    { title: "Unavailable", artist: "Davido ft. Musa Keys", thumbnail: "https://i.ytimg.com/vi/U0QK6KUsAdo/hqdefault.jpg", link: "https://www.youtube.com/watch?v=U0QK6KUsAdo" },
+                    { title: "Ku Lo Sa", artist: "Oxlade", thumbnail: "https://i.ytimg.com/vi/6t6SkVj3Lyc/hqdefault.jpg", link: "https://www.youtube.com/watch?v=6t6SkVj3Lyc" },
+                    { title: "Overloading", artist: "Mavins", thumbnail: "https://i.ytimg.com/vi/n7Z2ZbbkWEc/hqdefault.jpg", link: "https://www.youtube.com/watch?v=n7Z2ZbbkWEc" },
+                    { title: "Jerusalema", artist: "Master KG ft. Nomcebo", thumbnail: "https://i.ytimg.com/vi/fCZVL_8D048/hqdefault.jpg", link: "https://www.youtube.com/watch?v=fCZVL_8D048" },
+                    { title: "Ye", artist: "Burna Boy", thumbnail: "https://i.ytimg.com/vi/lPe09eE6Xio/hqdefault.jpg", link: "https://www.youtube.com/watch?v=lPe09eE6Xio" },
+                    { title: "Fall", artist: "Davido", thumbnail: "https://i.ytimg.com/vi/84WIaK3bl_s/hqdefault.jpg", link: "https://www.youtube.com/watch?v=84WIaK3bl_s" },
+                    { title: "Finesse", artist: "Pheelz ft. BNXN", thumbnail: "https://i.ytimg.com/vi/f6qo9o8x7KQ/hqdefault.jpg", link: "https://www.youtube.com/watch?v=f6qo9o8x7KQ" },
+                    { title: "Bandana", artist: "Fireboy DML & Asake", thumbnail: "https://i.ytimg.com/vi/n2bOEaPDIeY/hqdefault.jpg", link: "https://www.youtube.com/watch?v=n2bOEaPDIeY" },
+                    { title: "Peru", artist: "Fireboy DML", thumbnail: "https://i.ytimg.com/vi/qfZ2gEwS3qQ/hqdefault.jpg", link: "https://www.youtube.com/watch?v=qfZ2gEwS3qQ" },
+                    { title: "Shape of You", artist: "Ed Sheeran", thumbnail: "https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg", link: "https://www.youtube.com/watch?v=JGwWNGJdvx8" },
+                    { title: "Blinding Lights", artist: "The Weeknd", thumbnail: "https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg", link: "https://www.youtube.com/watch?v=4NRXx6U8ABQ" },
+                    { title: "Levitating", artist: "Dua Lipa ft. DaBaby", thumbnail: "https://i.ytimg.com/vi/TUVcZfQe-Kw/hqdefault.jpg", link: "https://www.youtube.com/watch?v=TUVcZfQe-Kw" },
+                    { title: "Peaches", artist: "Justin Bieber ft. Daniel Caesar, Giveon", thumbnail: "https://i.ytimg.com/vi/tQ0yjYUFKAE/hqdefault.jpg", link: "https://www.youtube.com/watch?v=tQ0yjYUFKAE" }
+                ],
+                _filtered: null
+            };
+
+            initPlaylist(playlistConfig);
+        </script>
+    </body>
+</html>
